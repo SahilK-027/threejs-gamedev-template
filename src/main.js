@@ -42,7 +42,7 @@ class App {
   #InitRenderer() {
     this.#threejs_ = new THREE.WebGLRenderer({ antialias: true });
     this.#threejs_.setSize(window.innerWidth, window.innerHeight);
-    this.#threejs_.setPixelRatio(window.devicePixelRatio);
+    this.#threejs_.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     document.body.appendChild(this.#threejs_.domElement);
   }
 
@@ -82,6 +82,7 @@ class App {
       this.#camera_.aspect = width / height;
       this.#camera_.updateProjectionMatrix();
       this.#threejs_.setSize(width, height);
+      this.#threejs_.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     });
   }
 
