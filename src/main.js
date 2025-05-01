@@ -9,6 +9,7 @@ class App {
   #controls_;
   #clock_;
   #mesh_;
+  #dpr_;
 
   constructor() {
     this.#threejs_ = null;
@@ -16,49 +17,40 @@ class App {
     this.#scene_ = null;
     this.#controls_ = null;
     this.#clock_ = new THREE.Clock();
+    this.#dpr_ = Math.min(window.devicePixelRatio, 2);
   }
 
   // Public methods
-  Initialize() {
-    this.#InitRenderer();
-    this.#InitScene();
-    this.#InitCamera();
-    this.#InitControls();
-    this.#InitObjects();
-    this.#InitEvents();
-  }
-
-  Run() {
-    const animate = () => {
-      requestAnimationFrame(animate);
-      const delta = this.#clock_.getDelta();
-      this.#Update(delta);
-      this.#Render();
-    };
-    animate();
+  initialize() {
+    this.#initRenderer();
+    this.#initScene();
+    this.#initCamera();
+    this.#initControls();
+    this.#initObjects();
+    this.#initEventListener();
+    this.#raf();
   }
 
   // Private methods
-  #InitRenderer() {
+  #initRenderer() {
     this.#threejs_ = new THREE.WebGLRenderer({ antialias: true });
     this.#threejs_.setSize(window.innerWidth, window.innerHeight);
-    this.#threejs_.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.#threejs_.setPixelRatio(this.#dpr_);
     document.body.appendChild(this.#threejs_.domElement);
   }
 
-  #InitScene() {
+  #initScene() {
     this.#scene_ = new THREE.Scene();
-    this.#scene_.background = new THREE.Color(0x202020);
-    this.#scene_.add(new THREE.AxesHelper(3));
+    this.#scene_.background = new THREE.Color(0x121316);
   }
 
-  #InitCamera() {
+  #initCamera() {
     const aspect = window.innerWidth / window.innerHeight;
     this.#camera_ = new THREE.PerspectiveCamera(50, aspect, 0.1, 2000);
     this.#camera_.position.set(0, 1, 5);
   }
 
-  #InitControls() {
+  #initControls() {
     this.#controls_ = new OrbitControls(
       this.#camera_,
       this.#threejs_.domElement
@@ -67,34 +59,44 @@ class App {
     this.#controls_.target.set(0, 0, 0);
   }
 
-  #InitObjects() {
+  #initObjects() {
     this.#mesh_ = new THREE.Mesh(
       new THREE.BoxGeometry(),
-      new THREE.MeshBasicMaterial({ color: 0x7444ff, wireframe: true })
+      new THREE.MeshBasicMaterial({ color: "orange", wireframe: true })
     );
     this.#scene_.add(this.#mesh_);
   }
 
-  #InitEvents() {
+  #initEventListener() {
     window.addEventListener("resize", () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
       this.#camera_.aspect = width / height;
       this.#camera_.updateProjectionMatrix();
       this.#threejs_.setSize(width, height);
-      this.#threejs_.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      this.#threejs_.setPixelRatio(this.#dpr_);
     });
   }
 
-  #Update(delta) {
-    this.#controls_.update();
+  #raf() {
+    requestAnimationFrame(() => {
+      const delta = this.#clock_.getDelta();
+      this.#stepUpdate(delta);
+      this.#render();
+      this.#raf();
+    });
   }
 
-  #Render() {
+  #stepUpdate(delta) {
+    // Game state updates
+    this.#controls_.update(delta);
+    this.#mesh_.rotation.y += delta;
+  }
+
+  #render() {
     this.#threejs_.render(this.#scene_, this.#camera_);
   }
 }
 
 const app = new App();
-app.Initialize();
-app.Run();
+app.initialize();
