@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
+import { DebugManager } from "./utils/DebugManager";
 
 class App {
   // Private vars
@@ -10,6 +11,7 @@ class App {
   #clock_;
   #mesh_;
   #dpr_;
+  #debug_;
 
   constructor() {
     this.#threejs_ = null;
@@ -18,6 +20,11 @@ class App {
     this.#controls_ = null;
     this.#clock_ = new THREE.Clock();
     this.#dpr_ = Math.min(window.devicePixelRatio, 2);
+    this.#debug_ = new DebugManager({
+      title: "Three.js App",
+      expanded: true,
+      enabled: true,
+    });
   }
 
   // Public methods
@@ -62,8 +69,66 @@ class App {
   #initObjects() {
     this.#mesh_ = new THREE.Mesh(
       new THREE.BoxGeometry(),
-      new THREE.MeshBasicMaterial({ color: "orange", wireframe: true })
+      new THREE.MeshBasicMaterial({
+        color: "orange",
+        wireframe: true,
+      })
     );
+
+    this.#debug_.addObject("Cube mat", "Cube", this.#mesh_.material, {
+      wireframe: {
+        label: "Enable wireframe",
+        onChange: (value) => {
+          this.#mesh_.material.wireframe = value;
+        },
+      },
+      color: {
+        label: "Color",
+        color: { type: "float" },
+      },
+      transparent: {
+        label: "Enable transparency",
+        onChange: (value) => {
+          this.#mesh_.material.transparent = value;
+          this.#mesh_.material.needsUpdate = true;
+        },
+      },
+      opacity: {
+        label: "Opacity",
+        onChange: (value) => {
+          this.#mesh_.material.opacity = value;
+        },
+        min: 0,
+        max: 1,
+        step: 0.01,
+      },
+    });
+
+    const PARAMS = {
+      offset2D: {
+        x: 0,
+        y: 0,
+      },
+    };
+
+    this.#debug_.addObject("Cube position", "Cube", PARAMS, {
+      offset2D: {
+        label: "Cube position",
+        onChange: (value) => {
+          this.#mesh_.position.set(value.x, value.y, 0);
+        },
+      },
+    });
+
+    this.#debug_.addObject("Cube scale", "Cube", this.#mesh_, {
+      scale: {
+        label: "Cube scale",
+        onChange: (value) => {
+          this.#mesh_.scale.set(value);
+        },
+      },
+    });
+
     this.#scene_.add(this.#mesh_);
   }
 
@@ -75,6 +140,12 @@ class App {
       this.#camera_.updateProjectionMatrix();
       this.#threejs_.setSize(width, height);
       this.#threejs_.setPixelRatio(this.#dpr_);
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "h") {
+        this.#debug_.toggle();
+      }
     });
   }
 
