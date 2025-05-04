@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { DebugManager } from "./utils/DebugManager";
+import Stats from "three/examples/jsm/libs/stats.module.js";
 
 class App {
   // Private vars
@@ -12,6 +13,7 @@ class App {
   #mesh_;
   #dpr_;
   #debug_;
+  #perf_;
 
   constructor() {
     this.#threejs_ = null;
@@ -25,6 +27,7 @@ class App {
       expanded: true,
       enabled: true,
     });
+    this.#perf_ = null;
   }
 
   // Public methods
@@ -35,6 +38,7 @@ class App {
     this.#initControls();
     this.#initObjects();
     this.#initEventListener();
+    this.#initStats();
     this.#raf();
   }
 
@@ -149,11 +153,18 @@ class App {
     });
   }
 
+  #initStats() {
+    this.#perf_ = new Stats();
+    document.body.appendChild(this.#perf_.dom);
+  }
+
   #raf() {
     requestAnimationFrame(() => {
+      this.#perf_.begin();
       const delta = this.#clock_.getDelta();
       this.#stepUpdate(delta);
       this.#render();
+      this.#perf_.end();
       this.#raf();
     });
   }
