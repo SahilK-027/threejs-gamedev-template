@@ -4,7 +4,6 @@ export default class Time extends EventEmitter {
   constructor() {
     super();
 
-    // Setup
     this.start = Date.now();
     this.current = this.start;
     this.elapsedTime = 0;
@@ -21,7 +20,6 @@ export default class Time extends EventEmitter {
     this.current = currentTime;
     this.elapsedTime = (this.current - this.start) / 1000;
 
-    // Emit event
     this.trigger('animate');
 
     window.requestAnimationFrame(() => {

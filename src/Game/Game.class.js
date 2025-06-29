@@ -14,11 +14,9 @@ export default class Game {
     }
     Game.instance = this;
 
-    // Options
     this.canvas = canvas;
     this.resources = resources;
 
-    // Setup
     this.sizes = new Sizes();
     this.time = new Time();
     this.debug = new DebugGUI();
@@ -27,7 +25,6 @@ export default class Game {
     this.renderer = new Renderer();
     this.world = new World();
 
-    // Event handler
     this.time.on('animate', () => {
       this.update();
     });

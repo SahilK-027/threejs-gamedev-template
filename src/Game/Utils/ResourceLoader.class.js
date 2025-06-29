@@ -86,7 +86,6 @@ export default class ResourceLoader extends EventEmitter {
     // glTF loaders
     this.loaders.gltfCompressLoader = new GLTFLoader(this.manager);
     this.loaders.gltfCompressLoader.setDRACOLoader(dracoLoader);
-
     this.loaders.gltfLoader = new GLTFLoader(this.manager);
 
     // textures

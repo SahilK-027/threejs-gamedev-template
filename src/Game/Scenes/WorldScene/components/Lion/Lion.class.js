@@ -8,18 +8,14 @@ export default class Lion {
     this.resources = this.game.resources;
     this.time = this.game.time;
 
-    // Setup
     this.modelResource = this.resources.items.lionModel;
     this.setModelInstance();
     this.setAnimation();
   }
 
   setModelInstance() {
-    // deep‐clone the GLTF scene so each lion has its own mesh + skeleton
     this.lion = this.modelResource.scene;
     this.lion.scale.set(0.005, 0.005, 0.005);
-
-    // position by the constructor arg
     this.lion.position.set(0, 0.02, 0);
 
     this.lion.traverse((child) => {
