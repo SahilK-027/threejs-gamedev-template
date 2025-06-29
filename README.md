@@ -1,6 +1,8 @@
 # Three.js Game Development Template
 
-A Three.js template for game development with a well-structured architecture, asset and performance management, and debugging tools.
+Three.js template for game development with a well-structured architecture, asset and performance management, and debugging tools.
+
+<img width="1440" alt="thumnail" src="https://github.com/user-attachments/assets/a2bb3d49-1f88-4de1-a53f-1146b816ca06" />
 
 ## 🚀 Quick Start
 
