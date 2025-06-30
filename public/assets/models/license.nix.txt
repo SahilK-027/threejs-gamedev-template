@@ -1,0 +1,11 @@
+Model Information:
+* title:	Zooba, Nix (With Anims)
+* source:	https://sketchfab.com/3d-models/zooba-nix-with-anims-c654d262418249b6b5a679031a6d977c
+* author:	Matt Alexander (https://sketchfab.com/alexanderfamilytravels)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Zooba, Nix (With Anims)" (https://sketchfab.com/3d-models/zooba-nix-with-anims-c654d262418249b6b5a679031a6d977c) by Matt Alexander (https://sketchfab.com/alexanderfamilytravels) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

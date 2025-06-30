@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 export default class Camera {
   constructor(fov = 35, near = 0.1, far = 100) {
-    this.game = new Game();
+    this.game = Game.getInstance();
     this.canvas = this.game.canvas;
     this.sizes = this.game.sizes;
     this.scene = this.game.scene;

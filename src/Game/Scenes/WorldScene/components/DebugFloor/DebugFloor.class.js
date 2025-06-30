@@ -5,7 +5,7 @@ import Game from '../../../../Game.class';
 
 export default class DebugFloor {
   constructor() {
-    this.game = new Game();
+    this.game = Game.getInstance();
     this.scene = this.game.scene;
     this.resources = this.game.resources;
 

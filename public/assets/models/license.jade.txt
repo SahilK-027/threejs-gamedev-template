@@ -1,0 +1,11 @@
+Model Information:
+* title:	Zooba, Jade (With Anims)
+* source:	https://sketchfab.com/3d-models/zooba-jade-with-anims-3ddb1b357f3a4b60973cf72dce035e71
+* author:	Matt Alexander (https://sketchfab.com/alexanderfamilytravels)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Zooba, Jade (With Anims)" (https://sketchfab.com/3d-models/zooba-jade-with-anims-3ddb1b357f3a4b60973cf72dce035e71) by Matt Alexander (https://sketchfab.com/alexanderfamilytravels) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

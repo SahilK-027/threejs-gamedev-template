@@ -1,13 +1,13 @@
 #include <common>
 #include <fog_pars_fragment>
 
-uniform vec3 uColor; // base floor color
-uniform vec3 uLineColor; // grid line color
-uniform float uGridFrequency; // how many cells across the plane
-uniform float uLineWidth; // half‑width of line, in UV‑cell units
-uniform float uInnerPatternCount; // how many little “.”s per big cell side (10)
-uniform float uInnerPatternWidth; // half‑width of the little “.” stroke
-uniform vec3 uInnerPatternLineColor; // color for "."
+uniform vec3 uColor;
+uniform vec3 uLineColor;
+uniform float uGridFrequency;
+uniform float uLineWidth;
+uniform float uInnerPatternCount;
+uniform float uInnerPatternWidth;
+uniform vec3 uInnerPatternLineColor;
 uniform vec2 uInnerPatternOffset;
 
 varying vec2 vUv;

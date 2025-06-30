@@ -4,7 +4,7 @@ import PerformanceMonitor from '../Utils/PerformanceMonitor';
 
 export default class Renderer {
   constructor() {
-    this.game = new Game();
+    this.game = Game.getInstance();
     this.canvas = this.game.canvas;
     this.sizes = this.game.sizes;
     this.scene = this.game.scene;

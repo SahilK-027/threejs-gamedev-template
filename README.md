@@ -1,8 +1,8 @@
 # Three.js Game Development Template
 
-Three.js template for game development with a well-structured architecture, asset and performance management, and debugging tools.
+Three.js template for game development with a well-structured architecture, asset, performance management, and debugging tools.
 
-<img width="1440" alt="thumnail" src="https://github.com/user-attachments/assets/a2bb3d49-1f88-4de1-a53f-1146b816ca06" />
+<img width="100%" alt="thumbnail" src="./thumbnail.gif" />
 
 ## 🚀 Quick Start
 
@@ -58,14 +58,12 @@ threejs-gamedev-template/
 │   │   ├── Scenes/                         # Game scenes and levels
 │   │   │   └── WorldScene/                 # Main world scene
 │   │   │       ├── components/             # Scene-specific components
-│   │   │       │   ├── Lion/               # Animated 3D model
 │   │   │       │   ├── Lighting/           # Scene lighting setup
-│   │   │       │   ├── RockyTerrain/       # Terrain with PBR materials
 │   │   │       │   └── DebugFloor/         # Custom shader floor
 │   │   │       └── World.scene.js
 │   │   │
 │   │   ├── Systems/                        # Game systems and managers
-│   │   │   └── PhysicsSystem.js            # Physics and collision detection
+│   │   │   └── PhysicsSystem.class.js      # Physics and collision detection
 │   │   │
 │   │   ├── Utils/                          # Utility classes
 │   │   │   ├── DebugGUI.js                 # Debug interface
@@ -196,7 +194,7 @@ import Game from '../../../../Game.class';
 
 export default class MyComponent {
   constructor() {
-    this.game = new Game();
+    this.game = Game.getInstance();
     this.scene = this.game.scene;
     this.resources = this.game.resources;
 
@@ -213,15 +211,6 @@ export default class MyComponent {
 }
 ```
 
-## 📊 Performance Optimization
-
-The template includes several performance optimization features:
-
-- **Draco Compression**: Automatic mesh compression for smaller file sizes
-- **Texture Optimization**: Proper texture filtering and wrapping
-- **Memory Management**: Automatic disposal of geometries and materials
-- **Performance Monitoring**: Real-time FPS and memory tracking
-
 ## 🙏 Acknowledgments
 
 - **Three.js**: The amazing 3D library that makes this all possible
@@ -229,12 +218,4 @@ The template includes several performance optimization features:
 - **lil-gui**: Lightweight debug GUI library
 - **three-perf**: Performance monitoring utilities
 
-## 📞 Support
-
-If you have any questions or need help with the template:
-
-- Open an issue on GitHub
-
----
-
-**Happy coding! 🎮✨**
+**Happy Game Development! 🎮✨**

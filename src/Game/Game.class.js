@@ -33,6 +33,13 @@ export default class Game {
     });
   }
 
+  static getInstance() {
+    if (!Game.instance) {
+      Game.instance = new DebugGUI();
+    }
+    return Game.instance;
+  }
+
   resize() {
     this.camera.resize();
     this.renderer.resize();

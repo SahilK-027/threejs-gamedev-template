@@ -1,10 +1,5 @@
 const ASSETS = [
   {
-    id: 'environmentMapHDRTexture',
-    type: 'HDRITexture',
-    path: ['/assets/textures/environmentMap/river_walk_1_2k.hdr'],
-  },
-  {
     id: 'environmentMapTexture',
     type: 'cubeMap',
     path: [
@@ -17,29 +12,34 @@ const ASSETS = [
     ],
   },
   {
-    id: 'rockyTerrainAOMap',
+    id: 'rubberTilesAOMap',
     type: 'texture',
-    path: ['/assets/textures/rockyTerrain/ao_1k.jpg'],
+    path: ['/assets/textures/rubberTiles/ao_1k.jpg'],
   },
   {
-    id: 'rockyTerrainNormalMap',
+    id: 'rubberTilesNormalMap',
     type: 'texture',
-    path: ['/assets/textures/rockyTerrain/normal_1k.jpg'],
+    path: ['/assets/textures/rubberTiles/normal_1k.jpg'],
   },
   {
-    id: 'rockyTerrainDisplacementMap',
+    id: 'rubberTilesDisplacementMap',
     type: 'texture',
-    path: ['/assets/textures/rockyTerrain/displacement_1k.jpg'],
+    path: ['/assets/textures/rubberTiles/displacement_1k.jpg'],
   },
   {
-    id: 'rockyTerrainDiffuseMap',
+    id: 'rubberTilesDiffuseMap',
     type: 'texture',
-    path: ['/assets/textures/rockyTerrain/diffuse_1k.jpg'],
+    path: ['/assets/textures/rubberTiles/diffuse_1k.jpg'],
   },
   {
-    id: 'lionModel',
-    type: 'gltfModel',
-    path: ['/assets/models/white_tiger_rigged_animated.glb'],
+    id: 'player1Model',
+    type: 'gltfModelCompressed',
+    path: ['/assets/models/nix_compressed.glb'],
+  },
+  {
+    id: 'player2Model',
+    type: 'gltfModelCompressed',
+    path: ['/assets/models/jade_compressed.glb'],
   },
 ];
 
