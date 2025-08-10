@@ -1,5 +1,6 @@
 import { ThreePerf } from 'three-perf';
 import DebugGUI from './DebugGUI';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
 
 export default class PerformanceMonitor {
   constructor(renderer) {
@@ -14,10 +15,11 @@ export default class PerformanceMonitor {
       anchorX: 'left',
       anchorY: 'top',
     });
+    this.statsNative = new Stats();
+    this.statsNative.dom.style.top = '70px';
+    document.body.append(this.statsNative.dom);
 
     this.debug.addFolder('Performance');
-    this.debug.add(this.stats, 'enabled', { label: 'Enable' }, 'Performance');
-    this.debug.add(this.stats, 'visible', { label: 'Visible' }, 'Performance');
     this.debug.add(this.stats, 'showGraph', { label: 'Graph' }, 'Performance');
   }
 
@@ -27,5 +29,6 @@ export default class PerformanceMonitor {
 
   endFrame() {
     if (this.stats.enabled) this.stats.end();
+    this.statsNative.update();
   }
 }

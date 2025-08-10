@@ -77,19 +77,66 @@ export default class DebugGUI {
     // Vector2 / Vector3: grouped axis sliders
     if (value instanceof THREE.Vector2 || value instanceof THREE.Vector3) {
       const vecFolder = controllerTarget.addFolder(label);
-      ['x', 'y', value instanceof THREE.Vector3 ? 'z' : null]
-        .filter((axis) => axis)
-        .forEach((axis) => {
-          vecFolder
-            .add(
-              value,
-              axis,
-              options.min !== undefined ? options.min : -1,
-              options.max !== undefined ? options.max : 1,
-              options.step !== undefined ? options.step : 0.01
-            )
-            .name(axis);
-        });
+      const axes = ['x', 'y', value instanceof THREE.Vector3 ? 'z' : null].filter(Boolean);
+
+      axes.forEach((axis) => {
+        const controller = vecFolder
+          .add(
+            value,
+            axis,
+            options.min !== undefined ? options.min : -1,
+            options.max !== undefined ? options.max : 1,
+            options.step !== undefined ? options.step : 0.01
+          )
+          .name(axis);
+
+        // Call options.onChange with the full vector whenever an axis changes
+        if (typeof options.onChange === 'function') {
+          controller.onChange(() => {
+            try {
+              options.onChange(value);
+            } catch (err) {
+              console.warn('DebugGUI: vector onChange threw', err);
+            }
+          });
+        }
+      });
+
+      return vecFolder;
+    }
+
+    // Plain object vector case: {x,y} or {x,y,z}
+    const isPlainVec =
+      value &&
+      typeof value === 'object' &&
+      ('x' in value && 'y' in value);
+
+    if (isPlainVec) {
+      const vecFolder = controllerTarget.addFolder(label);
+      const axes = ['x', 'y', 'z'].filter((a) => a in value);
+
+      axes.forEach((axis) => {
+        const controller = vecFolder
+          .add(
+            value,
+            axis,
+            options.min !== undefined ? options.min : -1,
+            options.max !== undefined ? options.max : 1,
+            options.step !== undefined ? options.step : 0.01
+          )
+          .name(axis);
+
+        if (typeof options.onChange === 'function') {
+          controller.onChange(() => {
+            try {
+              options.onChange(value);
+            } catch (err) {
+              console.warn('DebugGUI: plain-vector onChange threw', err);
+            }
+          });
+        }
+      });
+
       return vecFolder;
     }
 
