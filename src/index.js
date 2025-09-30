@@ -8,6 +8,7 @@ const resources = new ResourceLoader(ASSETS);
 
 resources.on('progress', ({ id, itemsLoaded, itemsTotal, percent }) => {
   progressBar.style.width = `${percent.toFixed(1)}%`;
+
   console.log(
     `Loaded asset: "${id}" (${itemsLoaded}/${itemsTotal} — ${percent.toFixed(
       1
@@ -17,12 +18,17 @@ resources.on('progress', ({ id, itemsLoaded, itemsTotal, percent }) => {
 
 resources.on('error', ({ id, url, itemsLoaded, itemsTotal }) => {
   console.error(
-    `Failed to load item named "${id}" at "${url}" (${itemsLoaded}/${itemsTotal} so far)`
+    `❌ Failed to load item named "${id}" at "${url}" (${itemsLoaded}/${itemsTotal} so far)`
   );
 });
 
 resources.on('loaded', () => {
-  console.log('✅ All assets are loaded, initializing game…!');
+  if (Object.keys(resources.items).length) {
+    console.log('✅ All assets are loaded. Initializing game…!');
+  } else {
+    console.log('☑️ No asset to load. Initializing game…!');
+  }
+
   new Game(document.getElementById('three'), resources);
   progressBar.style.display = 'none';
   progress.style.display = 'none';
