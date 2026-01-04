@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import Game from '../Game.class';
-import PerformanceMonitor from '../Utils/PerformanceMonitor';
+import PerformanceMonitor from '../Utils/Performance.class';
 
 export default class Renderer {
   constructor() {
@@ -11,12 +11,16 @@ export default class Renderer {
     this.camera = this.game.camera;
     this.renderer = this.game.renderer;
     this.debug = this.game.debug;
+    this.isDebugEnabled = this.game.isDebugEnabled;
 
     this.setRendererInstance();
+    if (this.isDebugEnabled) {
+      this.initGUI();
+    }
   }
 
   setRendererInstance() {
-    const toneMappingOptions = {
+    this.toneMappingOptions = {
       NoToneMapping: THREE.NoToneMapping,
       LinearToneMapping: THREE.LinearToneMapping,
       ReinhardToneMapping: THREE.ReinhardToneMapping,
@@ -32,26 +36,15 @@ export default class Renderer {
     });
 
     this.rendererInstance.toneMapping = THREE.NeutralToneMapping;
-    this.debug.add(
-      this.rendererInstance,
-      'toneMapping',
-      {
-        options: toneMappingOptions,
-        label: 'Tone Mapping',
-        onChange: (toneMappingType) => {
-          this.rendererInstance.toneMapping = toneMappingType;
-        },
-      },
-      'Renderer Settings'
-    );
-
     this.rendererInstance.toneMappingExposure = 1.75;
     this.rendererInstance.shadowMap.enabled = true;
     this.rendererInstance.shadowMap.type = THREE.PCFSoftShadowMap;
     this.rendererInstance.setSize(this.sizes.width, this.sizes.height);
     this.rendererInstance.setPixelRatio(this.sizes.pixelRatio);
 
-    this.setUpPerformanceMonitor();
+    if (this.isDebugEnabled) {
+      this.setUpPerformanceMonitor();
+    }
   }
 
   setUpPerformanceMonitor() {
@@ -63,9 +56,29 @@ export default class Renderer {
     this.rendererInstance.setPixelRatio(this.sizes.pixelRatio);
   }
 
+  initGUI() {
+    this.debug.add(
+      this.rendererInstance,
+      'toneMapping',
+      {
+        options: this.toneMappingOptions,
+        label: 'Tone Mapping',
+        onChange: (toneMappingType) => {
+          this.rendererInstance.toneMapping = toneMappingType;
+        },
+      },
+      'Renderer Settings'
+    );
+  }
   update() {
-    this.perf.beginFrame();
+    if (this.perf) {
+      this.perf.beginFrame();
+    }
+
     this.rendererInstance.render(this.scene, this.camera.cameraInstance);
-    this.perf.endFrame();
+
+    if (this.perf) {
+      this.perf.endFrame();
+    }
   }
 }

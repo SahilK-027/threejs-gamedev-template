@@ -1,11 +1,14 @@
 import { ThreePerf } from 'three-perf';
-import DebugGUI from './DebugGUI';
+import DebugGUI from './DebugGUI.class';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+import Game from '../Game.class';
 
 export default class PerformanceMonitor {
   constructor(renderer) {
+    this.game = Game.getInstance();
     this.renderer = renderer;
-    this.debug = DebugGUI.getInstance();
+    this.debug = this.game.debug;
+    this.isDebugEnabled = this.game.isDebugEnabled;
 
     this.stats = new ThreePerf({
       domElement: document.body,
@@ -19,8 +22,9 @@ export default class PerformanceMonitor {
     this.statsNative.dom.style.top = '70px';
     document.body.append(this.statsNative.dom);
 
-    this.debug.addFolder('Performance');
-    this.debug.add(this.stats, 'showGraph', { label: 'Graph' }, 'Performance');
+    if (this.isDebugEnabled) {
+      this.iniGUI();
+    }
   }
 
   beginFrame() {
@@ -30,5 +34,10 @@ export default class PerformanceMonitor {
   endFrame() {
     if (this.stats.enabled) this.stats.end();
     this.statsNative.update();
+  }
+
+  iniGUI() {
+    this.debug.addFolder('Performance');
+    this.debug.add(this.stats, 'showGraph', { label: 'Graph' }, 'Performance');
   }
 }

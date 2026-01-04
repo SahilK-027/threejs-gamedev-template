@@ -4,22 +4,26 @@ import Time from './Utils/Time.class';
 import Camera from './Core/Camera.class';
 import Renderer from './Core/Renderer.class';
 import World from './Scenes/WorldScene/World.scene';
-import DebugGUI from './Utils/DebugGUI';
+import DebugGUI from './Utils/DebugGUI.class';
 
 export default class Game {
-  constructor(canvas, resources) {
+  constructor(canvas, resources, debugMode) {
     // Singleton
     if (Game.instance) {
       return Game.instance;
     }
     Game.instance = this;
 
+    this.isDebugEnabled = debugMode;
+    if (this.isDebugEnabled) {
+      this.debug = new DebugGUI();
+    }
+
     this.canvas = canvas;
     this.resources = resources;
 
     this.sizes = new Sizes();
     this.time = new Time();
-    this.debug = new DebugGUI();
     this.scene = new THREE.Scene();
     this.camera = new Camera();
     this.renderer = new Renderer();
@@ -35,7 +39,7 @@ export default class Game {
 
   static getInstance() {
     if (!Game.instance) {
-      Game.instance = new DebugGUI();
+      Game.instance = new Game();
     }
     return Game.instance;
   }
