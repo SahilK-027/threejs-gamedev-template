@@ -4,7 +4,7 @@ import Time from './Utils/Time.class';
 import Camera from './Core/Camera.class';
 import Renderer from './Core/Renderer.class';
 import World from './World/World.scene';
-import DebugGUI from './Utils/DebugGUI.class';
+import DebugPane from './Utils/DebugPane.class';
 
 export default class Game {
   constructor(canvas, resources, debugMode) {
@@ -16,7 +16,7 @@ export default class Game {
 
     this.isDebugEnabled = debugMode;
     if (this.isDebugEnabled) {
-      this.debug = new DebugGUI();
+      this.debug = new DebugPane();
     }
 
     this.canvas = canvas;
@@ -89,7 +89,7 @@ export default class Game {
 
     this.camera.controls.dispose();
     this.renderer.rendererInstance.dispose();
-    this.debug.gui.destroy();
+    if (this.debug) this.debug.dispose();
 
     // Null references
     this.canvas = null;

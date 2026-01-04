@@ -1,6 +1,6 @@
 # Three.js Game Development Template
 
-Three.js template for game development with a well-structured architecture, asset, performance management, and debugging tools.
+Three.js template for game development with a well-structured architecture, asset management, performance monitoring, and debugging tools.
 
 <img width="100%" alt="thumbnail" src="./thumbnail.gif" />
 
@@ -32,190 +32,163 @@ npm run build
 npm run preview
 ```
 
+### Debug Mode
+
+Add `?mode=debug` to the URL to enable debug mode with performance monitoring and GUI controls.
+
 ## 📁 Project Structure
 
 ```
 threejs-gamedev-template/
 ├── public/
-│   ├── assets/                             # Game assets
-│   │   ├── models/                         # 3D models (GLTF/GLB)
-│   │   └── textures/                       # Textures and materials
-│   └── draco/                              # Draco compression files
+│   ├── assets/
+│   │   ├── models/                         # 3D models (GLB with Draco compression)
+│   │   └── textures/                       # Textures (environment maps, materials)
+│   └── draco/                              # Draco decoder files
 │
 ├── src/
+│   ├── Config/
+│   │   └── assets.js                       # Asset definitions
+│   │
 │   ├── Game/
-│   │   ├── Core/                           # Core engine components
+│   │   ├── Core/
 │   │   │   ├── Camera.class.js             # Camera with OrbitControls
 │   │   │   └── Renderer.class.js           # WebGL renderer setup
 │   │   │
-│   │   ├── Input/                          # User input handling
+│   │   ├── Entities/
+│   │   │   ├── Player1.class.js            # Player 1 entity
+│   │   │   └── Player2.class.js            # Player 2 entity
+│   │   │
+│   │   ├── Input/
 │   │   │   └── Keyboard.class.js           # Keyboard input management
 │   │   │
-│   │   ├── Entities/                       # Game specific components and characters
-│   │   │   ├── Player.class.js             # Player entity
-│   │   │   └── Enemy.class.js              # Enemy entities
-│   │   │
-│   │   ├── Scenes/                         # Game scenes and levels
-│   │   │   └── WorldScene/                 # Main world scene
-│   │   │       ├── components/             # Scene-specific components
-│   │   │       │   ├── Lighting/           # Scene lighting setup
-│   │   │       │   └── DebugFloor/         # Custom shader floor
-│   │   │       └── World.scene.js
-│   │   │
-│   │   ├── Systems/                        # Game systems and managers
+│   │   ├── Systems/
 │   │   │   └── PhysicsSystem.class.js      # Physics and collision detection
 │   │   │
-│   │   ├── Utils/                          # Utility classes
-│   │   │   ├── DebugGUI.js                 # Debug interface
+│   │   ├── Utils/
+│   │   │   ├── DebugGUI.class.js           # lil-gui debug interface
+│   │   │   ├── DebugPane.class.js          # Tweakpane debug interface
 │   │   │   ├── EventEmitter.class.js       # Event system
-│   │   │   ├── PerformanceMonitor.js       # Performance tracking
-│   │   │   ├── ResourceLoader.class.js     # Asset management
+│   │   │   ├── Math.class.js               # Math utilities
+│   │   │   ├── Performance.class.js        # Performance monitoring
+│   │   │   ├── ResourceLoader.class.js     # Asset loading with progress
 │   │   │   ├── Sizes.class.js              # Responsive sizing
 │   │   │   └── Time.class.js               # Animation timing
 │   │   │
-│   │   └── Game.class.js                   # Main game controller
-│   ├── assetSources.js                     # Asset definitions
+│   │   ├── World/
+│   │   │   ├── Components/
+│   │   │   │   ├── BouncingBall/           # Bouncing ball component
+│   │   │   │   ├── DebugFloor/             # Custom shader floor
+│   │   │   │   ├── Lighting/               # Scene lighting
+│   │   │   │   └── Stage/                  # Stage component
+│   │   │   └── World.scene.js              # Main world scene
+│   │   │
+│   │   └── Game.class.js                   # Main game controller (singleton)
+│   │
+│   ├── Shaders/
+│   │   └── DebugFloor/                     # Custom GLSL shaders
+│   │
 │   ├── index.js                            # Application entry point
 │   └── style.scss                          # Global styles
-├── index.html                              # HTML entry point
-├── package.json                            # Dependencies and scripts
-└── vite.config.js                          # Vite configuration
+│
+├── index.html
+├── package.json
+└── vite.config.js
 ```
 
 ## 🎯 Core Components
 
 ### Game Engine (`Game.class.js`)
 
-The main orchestrator that manages the game loop, scene, camera, renderer, and world. Implements a singleton pattern for global access.
+Singleton orchestrator managing the game loop, scene, camera, renderer, and world.
 
 ```javascript
-// Initialize the game
-const game = new Game(canvas, resources);
+const game = new Game(canvas, resources, isDebugMode);
 
-// Access game components
+// Access anywhere via singleton
+const game = Game.getInstance();
 const { scene, camera, renderer, world } = game;
 ```
 
-### Resource Loader (`ResourceLoader.class.js`)
+### Resource Loader
 
-Advanced asset management with progress tracking, error handling, and support for multiple file formats.
-
-### Asset Management
+Asset management with progress tracking and support for multiple formats.
 
 ```javascript
-// Define assets `src/assetSources.js`:
+// Define assets in src/Config/assets.js
 const ASSETS = [
   {
-    id: 'modelName',
-    type: 'gltfModel', // or 'gltfModelCompressed' for Draco
-    path: '/assets/models/model.glb',
+    id: 'player1Model',
+    type: 'gltfModelCompressed',  // Draco-compressed GLTF
+    path: ['/assets/models/model.glb'],
   },
   {
     id: 'textureName',
-    type: 'texture', // or 'HDRITexture', 'cubeMap'
-    path: '/assets/textures/texture.jpg',
+    type: 'texture',  // Also: 'cubeMap', 'HDRITexture'
+    path: ['/assets/textures/texture.jpg'],
   },
 ];
 
-// Load assets
+// Load with progress events
 const resources = new ResourceLoader(ASSETS);
-resources.on('progress', ({ percent }) => console.log(`${percent}% loaded`));
-resources.on('loaded', () => console.log('All assets loaded!'));
+resources.on('progress', ({ percent }) => console.log(`${percent}%`));
+resources.on('loaded', () => initGame());
 ```
 
-### Debug GUI (`DebugGUI.js`)
+### Event System
 
-Interactive debugging interface with automatic type detection and folder organization.
-
-```javascript
-// Add controls to debug GUI
-debug.add(
-  material.uniforms.uSpeed,
-  'value',
-  {
-    min: 0,
-    max: 10,
-    step: 0.01,
-    label: 'Animation Speed',
-  },
-  'Animation'
-);
-
-debug.add(
-  object.position,
-  'position',
-  {
-    min: -10,
-    max: 10,
-    step: 0.1,
-    label: 'Object Position',
-  },
-  'Transform'
-);
-```
-
-### Eventemitter System (`EventEmitter.class.js`)
-
-Custom event emitter for decoupled communication between components.
+Decoupled communication between components.
 
 ```javascript
-// Subscribe to events
-this.on('eventName', (data) => {
-  console.log('Event received:', data);
-});
+// Subscribe
+this.on('eventName', (data) => handleEvent(data));
 
-// Emit events
+// Emit
 this.trigger('eventName', { key: 'value' });
-```
-
-## 🔧 Configuration
-
-### Vite Configuration
-
-The project uses Vite with GLSL plugin for shader support:
-
-```javascript
-// vite.config.js
-import glsl from 'vite-plugin-glsl';
-
-export default {
-  plugins: [glsl()],
-};
 ```
 
 ## 🎮 Adding New Features
 
-### Creating a New Scene Component
+### Creating a World Component
 
 ```javascript
-// src/Game/Scenes/WorldScene/components/MyComponent/MyComponent.class.js
+// src/Game/World/Components/MyComponent/MyComponent.class.js
 import * as THREE from 'three';
-import Game from '../../../../Game.class';
+import Game from '../../../Game.class';
 
 export default class MyComponent {
   constructor() {
     this.game = Game.getInstance();
     this.scene = this.game.scene;
     this.resources = this.game.resources;
-
     this.setup();
   }
 
   setup() {
-    // Your component logic here
+    // Initialize component
   }
 
   update() {
-    // Update logic called each frame
+    // Called each frame
   }
 }
 ```
 
+## 🔧 Tech Stack
+
+- **Three.js** - 3D rendering
+- **Vite** - Build tool with GLSL plugin
+- **Tweakpane / lil-gui** - Debug interfaces
+- **three-perf** - Performance monitoring
+- **Sass** - Styling
+- **Draco** - Model compression
+
 ## 🙏 Acknowledgments
 
-- **Three.js**: The amazing 3D library that makes this all possible
-- **Vite**: Fast build tool for modern web development
-- **lil-gui**: Lightweight debug GUI library
-- **three-perf**: Performance monitoring utilities
+- [Three.js](https://threejs.org/) - 3D library
+- [Vite](https://vitejs.dev/) - Build tool
+- [lil-gui](https://lil-gui.georgealways.com/) - Debug GUI
+- [Tweakpane](https://tweakpane.github.io/docs/) - Debug pane
+- [three-perf](https://github.com/utsuboco/three-perf) - Performance monitoring
 
 **Happy Game Development! 🎮✨**

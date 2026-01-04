@@ -15,7 +15,7 @@ export default class Renderer {
 
     this.setRendererInstance();
     if (this.isDebugEnabled) {
-      this.initGUI();
+      this.initTweakPane();
     }
   }
 
@@ -56,7 +56,7 @@ export default class Renderer {
     this.rendererInstance.setPixelRatio(this.sizes.pixelRatio);
   }
 
-  initGUI() {
+  initTweakPane() {
     this.debug.add(
       this.rendererInstance,
       'toneMapping',
