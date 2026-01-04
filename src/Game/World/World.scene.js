@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import Game from '../../Game.class';
-import DebugFloor from './components/DebugFloor/DebugFloor.class';
-import Lighting from './components/Lighting/Lighting.class';
-import Player1 from '../../Entities/Player1.class';
-import Player2 from '../../Entities/Player2.class';
+import Game from '../Game.class';
+import DebugFloor from './Components/DebugFloor/DebugFloor.class';
+import Lighting from './Components/Lighting/Lighting.class';
+import Player1 from '../Entities/Player1.class';
+import Player2 from '../Entities/Player2.class';
 
 export default class World {
   constructor() {

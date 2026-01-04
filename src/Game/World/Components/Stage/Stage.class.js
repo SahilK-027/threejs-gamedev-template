@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import Game from '../../../../Game.class';
+import Game from '../../../Game.class';
 
 export default class Stage {
   constructor(position) {

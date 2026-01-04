@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import vertexShader from './shaders/vertex.glsl';
-import fragmentShader from './shaders/fragment.glsl';
-import Game from '../../../../Game.class';
+import vertexShader from '../../../../Shaders/DebugFloor/vertex.glsl';
+import fragmentShader from '../../../../Shaders/DebugFloor/fragment.glsl';
+import Game from '../../../Game.class';
 
 export default class DebugFloor {
   constructor() {

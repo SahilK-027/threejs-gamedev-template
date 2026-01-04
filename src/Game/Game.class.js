@@ -3,7 +3,7 @@ import Sizes from './Utils/Sizes.class';
 import Time from './Utils/Time.class';
 import Camera from './Core/Camera.class';
 import Renderer from './Core/Renderer.class';
-import World from './Scenes/WorldScene/World.scene';
+import World from './World/World.scene';
 import DebugGUI from './Utils/DebugGUI.class';
 
 export default class Game {

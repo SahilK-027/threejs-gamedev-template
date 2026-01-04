@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import Game from '../Game.class';
-import Stage from '../Scenes/WorldScene/components/Stage/Stage.class';
+import Stage from '../World/Components/Stage/Stage.class';
 
 export default class Player2 {
   constructor() {
