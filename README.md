@@ -2,7 +2,7 @@
 
 Three.js template for game development with a well-structured architecture, asset management, performance monitoring, and debugging tools.
 
-<img width="100%" alt="thumbnail" src="https://github.com/user-attachments/assets/c67c20c5-b008-4eb8-8d35-87f5e1dff33d" />
+<img width="100%" alt="thumbnail" src="./thumbnail.png" />
 
 ## 🚀 Quick Start
 
