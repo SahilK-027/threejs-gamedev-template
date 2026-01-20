@@ -9,6 +9,11 @@ export default class Camera {
     this.sizes = this.game.sizes;
     this.scene = this.game.scene;
 
+    this.idealRatio = 16 / 9;
+    this.ratioOverflow = 0;
+    this.initialCameraPosition = new THREE.Vector3(1.75, 1.0, 1.75);
+    this.baseMaxDistance = 10;
+
     this.setPerspectiveCameraInstance(fov, near, far);
     this.setOrbitControls();
   }
@@ -21,20 +26,39 @@ export default class Camera {
       near,
       far
     );
-    this.cameraInstance.position.set(1.75, 1.0, 1.75);
+    this.cameraInstance.position.copy(this.initialCameraPosition);
     this.scene.add(this.cameraInstance);
   }
 
   setOrbitControls() {
     this.controls = new OrbitControls(this.cameraInstance, this.canvas);
     this.controls.enableDamping = true;
+    this.controls.enablePan = true;
+    this.controls.enableZoom = true;
+    this.controls.enableRotate = true;
+    this.controls.maxDistance = this.baseMaxDistance;
     this.controls.maxPolarAngle = Math.PI / 2.3;
+  }
+
+  updateCameraForAspectRatio() {
+    const currentRatio = this.sizes.width / this.sizes.height;
+    this.ratioOverflow = Math.max(1, this.idealRatio / currentRatio) - 1;
+
+    const baseDistance = this.initialCameraPosition.length();
+    const additionalDistance = baseDistance * this.ratioOverflow * 0.27;
+    const direction = this.initialCameraPosition.clone().normalize();
+    const newDistance = baseDistance + additionalDistance;
+    const adjustedPosition = direction.multiplyScalar(newDistance);
+
+    this.cameraInstance.position.copy(adjustedPosition);
+    this.controls.maxDistance = Math.max(this.baseMaxDistance, newDistance);
   }
 
   resize() {
     const aspectRatio = this.sizes.width / this.sizes.height;
     this.cameraInstance.aspect = aspectRatio;
     this.cameraInstance.updateProjectionMatrix();
+    this.updateCameraForAspectRatio();
   }
 
   update() {
