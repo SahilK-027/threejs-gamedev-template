@@ -1,6 +1,6 @@
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import * as THREE from 'three';
 import EventEmitter from './EventEmitter.class';
 
@@ -120,7 +120,7 @@ export default class ResourceLoader extends EventEmitter {
 
     // textures
     this.loaders.textureLoader = new THREE.TextureLoader(this.manager);
-    this.loaders.hdriLoader = new RGBELoader(this.manager);
+    this.loaders.hdriLoader = new HDRLoader(this.manager);
     this.loaders.cubeTextureLoader = new THREE.CubeTextureLoader(this.manager);
   }
 

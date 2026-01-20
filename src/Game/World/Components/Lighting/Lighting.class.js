@@ -17,7 +17,17 @@ export default class Lighting {
     this.keyLight = new THREE.DirectionalLight(0xffffff, 4, 0, 2);
     this.keyLight.position.set(2, 2, -2);
     this.keyLight.castShadow = true;
-    this.keyLight.shadow.mapSize.set(1024, 1024);
+    this.keyLight.shadow.mapSize.set(4096, 4096);
+    const d = 3;
+    this.keyLight.shadow.camera.left = -d;
+    this.keyLight.shadow.camera.right = d;
+    this.keyLight.shadow.camera.top = d;
+    this.keyLight.shadow.camera.bottom = -d;
+    this.keyLight.shadow.camera.near = 0.5;
+    this.keyLight.shadow.camera.far = 100;
+    this.keyLight.shadow.bias = -0.0005;
+    this.keyLight.shadow.normalBias = 0.005;
+
     this.scene.add(this.keyLight);
 
     // Fill light: softer, reduces shadows
