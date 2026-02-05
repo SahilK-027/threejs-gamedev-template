@@ -38,6 +38,67 @@
     </div>
     <div id="progress"><div id="bar"></div></div>
     <canvas id="three"></canvas>
+    
+    <!-- Audio Settings UI -->
+    <button id="settings-btn" aria-label="Settings">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3m15.364 6.364l-4.243-4.243m-6 0l-4.242-4.242m12.485 12.485l-4.243-4.243m-6 0l-4.242-4.242"></path>
+      </svg>
+    </button>
+
+    <div id="settings-panel" class="hidden">
+      <div class="settings-header">
+        <h2>Audio Settings</h2>
+        <button id="close-settings" aria-label="Close">&times;</button>
+      </div>
+      <div class="settings-content">
+        <div class="setting-item setting-toggle">
+          <label for="audio-toggle">Audio</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="audio-toggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label for="master-volume">Master Volume</label>
+          <div class="volume-control">
+            <input type="range" id="master-volume" min="0" max="100" value="100">
+            <span id="master-volume-value">100%</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label for="bgm-volume">Music Volume</label>
+          <div class="volume-control">
+            <input type="range" id="bgm-volume" min="0" max="100" value="50">
+            <span id="bgm-volume-value">50%</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label for="ambient-volume">Ambient Volume</label>
+          <div class="volume-control">
+            <input type="range" id="ambient-volume" min="0" max="100" value="60">
+            <span id="ambient-volume-value">60%</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label for="sfx-volume">Sound Effects Volume</label>
+          <div class="volume-control">
+            <input type="range" id="sfx-volume" min="0" max="100" value="100">
+            <span id="sfx-volume-value">100%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Start Game Overlay -->
+    <div id="start-overlay">
+      <div id="start-content">
+        <h1>Ready to Play?</h1>
+        <button id="start-game-btn">Start Game</button>
+      </div>
+    </div>
+
     <script type="module" src="/src/index.js"></script>
   </body>
 </html>

@@ -5,6 +5,10 @@ import Camera from './Core/Camera.class';
 import Renderer from './Core/Renderer.class';
 import World from './World/World.scene';
 import DebugPane from './Utils/DebugPane.class';
+import AudioManager from './Managers/AudioManager.class';
+import AudioSettingsUI from './UI/AudioSettingsUI.class';
+import VisibilityManager from './Managers/VisibilityManager.class';
+import KeyboardControls from './Input/Keyboard.class';
 
 export default class Game {
   constructor(canvas, resources, debugMode) {
@@ -21,6 +25,17 @@ export default class Game {
 
     this.canvas = canvas;
     this.resources = resources;
+    this.isPaused = false;
+
+    // Visibility Manager
+    this.visibilityManager = new VisibilityManager();
+
+    // Audio
+    this.audioManager = new AudioManager(this.resources);
+    this.audioSettingsUI = new AudioSettingsUI(this.audioManager);
+
+    // Input
+    this.keyboard = new KeyboardControls(this.audioManager);
 
     this.sizes = new Sizes();
     this.time = new Time();
@@ -34,6 +49,14 @@ export default class Game {
     });
     this.sizes.on('resize', () => {
       this.resize();
+    });
+
+    // Listen to visibility changes
+    this.visibilityManager.on('pause', () => {
+      this.pause();
+    });
+    this.visibilityManager.on('resume', () => {
+      this.resume();
     });
   }
 
@@ -50,14 +73,53 @@ export default class Game {
   }
 
   update() {
+    if (this.isPaused) return;
+
     this.camera.update();
     this.world.update();
     this.renderer.update();
   }
 
+  pause() {
+    if (this.isPaused) return;
+
+    this.isPaused = true;
+
+    // Pause time (stops delta time accumulation)
+    if (this.time) this.time.pause();
+
+    // Pause audio
+    if (this.audioManager && !this.audioManager.isMuted) {
+      this.audioManager.pauseBGM();
+    }
+  }
+
+  resume() {
+    if (!this.isPaused) return;
+
+    this.isPaused = false;
+
+    // Resume time
+    if (this.time) this.time.resume();
+
+    // Resume audio
+    if (this.audioManager && !this.audioManager.isMuted) {
+      // Handle audio context resume
+      if (this.audioManager.audioContext?.state === 'suspended') {
+        this.audioManager.audioContext.resume().then(() => {
+          this.audioManager.resumeBGM();
+        });
+      } else {
+        this.audioManager.resumeBGM();
+      }
+    }
+  }
+
   destroy() {
     this.sizes.off('resize');
     this.time.off('animate');
+    this.visibilityManager.off('pause');
+    this.visibilityManager.off('resume');
 
     this.scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
@@ -90,6 +152,10 @@ export default class Game {
     this.camera.controls.dispose();
     this.renderer.rendererInstance.dispose();
     if (this.debug) this.debug.dispose();
+    if (this.audioManager) this.audioManager.destroy();
+    if (this.audioSettingsUI) this.audioSettingsUI.destroy();
+    if (this.visibilityManager) this.visibilityManager.destroy();
+    if (this.keyboard) this.keyboard.destroy();
 
     // Null references
     this.canvas = null;
@@ -98,5 +164,9 @@ export default class Game {
     this.renderer = null;
     this.world = null;
     this.debug = null;
+    this.audioManager = null;
+    this.audioSettingsUI = null;
+    this.visibilityManager = null;
+    this.keyboard = null;
   }
 }
