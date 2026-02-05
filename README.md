@@ -42,8 +42,13 @@ Add `?mode=debug` to the URL to enable debug mode with performance monitoring an
 threejs-gamedev-template/
 ├── public/
 │   ├── assets/
-│   │   ├── models/                         # 3D models (GLB with Draco compression)
+│   │   ├── audio/
+│   │   │   ├── ambient/                    # Ambient audio loops
+│   │   │   ├── bgm/                        # Background music
+│   │   │   └── sfx/                        # Sound effects
+│   │   ├── models/                         # 3D models (GLB with compression)
 │   │   └── textures/                       # Textures (environment maps, materials)
+│   ├── basis/                              # Basis Universal transcoder (KTX2)
 │   └── draco/                              # Draco decoder files
 │
 ├── src/
@@ -62,8 +67,15 @@ threejs-gamedev-template/
 │   │   ├── Input/
 │   │   │   └── Keyboard.class.js           # Keyboard input management
 │   │   │
+│   │   ├── Managers/
+│   │   │   ├── AudioManager.class.js       # Audio system with spatial audio
+│   │   │   └── VisibilityManager.class.js  # Tab visibility management
+│   │   │
 │   │   ├── Systems/
 │   │   │   └── PhysicsSystem.class.js      # Physics and collision detection
+│   │   │
+│   │   ├── UI/
+│   │   │   └── AudioSettingsUI.class.js    # Audio controls UI
 │   │   │
 │   │   ├── Utils/
 │   │   │   ├── DebugGUI.class.js           # lil-gui debug interface
@@ -112,20 +124,67 @@ const { scene, camera, renderer, world } = game;
 
 ### Resource Loader
 
-Asset management with progress tracking and support for multiple formats.
+Asset management with progress tracking and support for multiple formats including textures, models, fonts, and audio.
 
 ```javascript
 // Define assets in src/Config/assets.js
 const ASSETS = [
+  // 3D Models with various compression options
   {
     id: 'player1Model',
-    type: 'gltfModelCompressed',  // Draco-compressed GLTF
-    path: ['/assets/models/model.glb'],
+    type: 'gltfModel', // Uncompressed GLTF
+    path: '/assets/models/model.glb',
   },
   {
-    id: 'textureName',
-    type: 'texture',  // Also: 'cubeMap', 'HDRITexture'
-    path: ['/assets/textures/texture.jpg'],
+    id: 'player2Model',
+    type: 'gltfModelDracoCompressed', // Draco geometry compression
+    path: '/assets/models/model_draco.glb',
+  },
+  {
+    id: 'player3Model',
+    type: 'gltfModelKTX2Compressed', // KTX2 texture compression
+    path: '/assets/models/model_ktx2.glb',
+  },
+  {
+    id: 'player4Model',
+    type: 'gltfModelDracoKTX2Compressed', // Both Draco + KTX2
+    path: '/assets/models/model_full.glb',
+  },
+
+  // Textures
+  {
+    id: 'diffuseMap',
+    type: 'texture', // Standard textures (JPG, PNG)
+    path: '/assets/textures/diffuse.jpg',
+  },
+  {
+    id: 'envMap',
+    type: 'cubeMap', // Environment cube maps
+    path: ['/px.jpg', '/nx.jpg', '/py.jpg', '/ny.jpg', '/pz.jpg', '/nz.jpg'],
+  },
+  {
+    id: 'hdriMap',
+    type: 'HDRITexture', // HDR environment maps
+    path: '/assets/textures/environment.hdr',
+  },
+
+  // Fonts
+  {
+    id: 'mainFont',
+    type: 'font', // Three.js JSON fonts
+    path: '/assets/fonts/font.json',
+  },
+
+  // Audio
+  {
+    id: 'bgMusic',
+    type: 'audio', // Audio files (MP3, OGG, WAV)
+    path: '/assets/audio/bgm/music.mp3',
+  },
+  {
+    id: 'jumpSound',
+    type: 'audio',
+    path: '/assets/audio/sfx/jump.mp3',
   },
 ];
 
@@ -133,6 +192,47 @@ const ASSETS = [
 const resources = new ResourceLoader(ASSETS);
 resources.on('progress', ({ percent }) => console.log(`${percent}%`));
 resources.on('loaded', () => initGame());
+
+// Access loaded resources
+const model = resources.items.player1Model;
+const audioBuffer = resources.items.bgMusic;
+```
+
+### Audio Manager
+
+Comprehensive audio system with spatial audio, volume control, and automatic pause/resume.
+
+```javascript
+// Initialize (automatically done in Game.class.js)
+const audioManager = new AudioManager();
+
+// Play background music
+audioManager.playBGM('bgMusic', { volume: 0.5, loop: true });
+
+// Play sound effect
+audioManager.playSFX('jumpSound', { volume: 0.8 });
+
+// Play positional 3D audio
+const sound = audioManager.playPositionalSFX('footstep', playerMesh, {
+  volume: 0.6,
+  refDistance: 5,
+  rolloffFactor: 2,
+});
+
+// Control playback
+audioManager.pauseBGM();
+audioManager.resumeBGM();
+audioManager.stopAllSounds();
+
+// Volume control
+audioManager.setMasterVolume(0.7);
+audioManager.setBGMVolume(0.5);
+audioManager.setSFXVolume(0.8);
+
+// Mute/unmute
+audioManager.toggleMute();
+audioManager.mute();
+audioManager.unmute();
 ```
 
 ### Event System
@@ -181,7 +281,24 @@ export default class MyComponent {
 - **Tweakpane / lil-gui** - Debug interfaces
 - **three-perf** - Performance monitoring
 - **Sass** - Styling
-- **Draco** - Model compression
+- **Draco** - Geometry compression
+- **Basis Universal (KTX2)** - Texture compression
+- **Web Audio API** - Spatial audio system
+
+## ✨ Features
+
+- 🎮 **Game Loop** - Optimized update/render cycle with delta time
+- 📦 **Asset Management** - Multi-format resource loader with progress tracking
+- 🎵 **Audio System** - Spatial 3D audio with volume controls and auto-pause
+- 🎨 **Custom Shaders** - GLSL shader support with Vite plugin
+- 📊 **Performance Monitoring** - Real-time FPS and memory tracking
+- 🐛 **Debug Tools** - Tweakpane and lil-gui integration
+- 📱 **Responsive** - Automatic canvas resizing
+- ⚡ **Optimized Assets** - Draco geometry + KTX2 texture compression
+- 🎯 **Physics System** - Collision detection and response
+- ⌨️ **Input Management** - Keyboard controls
+- 🔊 **Audio UI** - Built-in volume controls and mute toggle
+- 👁️ **Visibility Management** - Auto-pause when tab is hidden
 
 ## 🙏 Acknowledgments
 
@@ -190,5 +307,13 @@ export default class MyComponent {
 - [lil-gui](https://lil-gui.georgealways.com/) - Debug GUI
 - [Tweakpane](https://tweakpane.github.io/docs/) - Debug pane
 - [three-perf](https://github.com/utsuboco/three-perf) - Performance monitoring
+- [Draco](https://google.github.io/draco/) - Geometry compression
+- [Basis Universal](https://github.com/BinomialLLC/basis_universal) - Texture compression
+
+## 📚 Documentation
+
+For detailed documentation on specific systems:
+
+- [AudioManager README](./src/Game/Managers/AudioManager.README.md) - API reference
 
 **Happy Game Development! 🎮✨**
