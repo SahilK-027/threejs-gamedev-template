@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import Game from '../Game.class';
 import DebugFloor from './Components/DebugFloor/DebugFloor.class';
 import Lighting from './Components/Lighting/Lighting.class';
-import BouncingBall from './Components/BouncingBall/BouncingBall.class';
 import Player1 from '../Entities/Player1.class';
 import Player2 from '../Entities/Player2.class';
 
@@ -18,7 +17,6 @@ export default class World {
     this.debugFloor = new DebugFloor();
     this.player1 = new Player1();
     this.player2 = new Player2();
-    this.bouncingBall = new BouncingBall();
 
     this.lighting = new Lighting({ helperEnabled: false });
   }
@@ -26,6 +24,5 @@ export default class World {
   update() {
     this.player1.update();
     this.player2.update();
-    this.bouncingBall.update();
   }
 }

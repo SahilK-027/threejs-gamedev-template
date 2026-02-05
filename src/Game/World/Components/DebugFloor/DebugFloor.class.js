@@ -19,7 +19,6 @@ export default class DebugFloor {
     this.floorMaterial = new THREE.ShaderMaterial({
       vertexShader: vertexShader,
       fragmentShader: fragmentShader,
-      fog: true,
       uniforms: {
         ...fogUniforms,
         uColor: { value: new THREE.Color(0x121316) },
@@ -31,6 +30,7 @@ export default class DebugFloor {
         uInnerPatternWidth: { value: 0.1 },
         uInnerPatternOffset: { value: new THREE.Vector2(0.505, 0.505) },
       },
+      fog: true,
     });
 
     this.floorMesh = new THREE.Mesh(this.floorGeometry, this.floorMaterial);
