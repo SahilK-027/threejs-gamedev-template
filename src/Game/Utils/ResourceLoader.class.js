@@ -1,6 +1,8 @@
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import * as THREE from 'three';
 import EventEmitter from './EventEmitter.class';
 
@@ -108,20 +110,65 @@ export default class ResourceLoader extends EventEmitter {
     // feed the manager into each loader
     this.loaders = {};
 
-    // Draco‐compression for glTF‑compressed
+    // Draco loader for geometry compression
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('/draco/');
+    dracoLoader.setDecoderPath('/draco/gltf/');
     this.loaders.dracoLoader = dracoLoader;
 
-    // glTF loaders
-    this.loaders.gltfCompressLoader = new GLTFLoader(this.manager);
-    this.loaders.gltfCompressLoader.setDRACOLoader(dracoLoader);
+    // KTX2 loader for texture compression
+    const ktx2Loader = new KTX2Loader();
+    ktx2Loader.setTranscoderPath('/basis/');
+
+    // Detect support - create a temporary renderer if needed
+    if (typeof window !== 'undefined') {
+      try {
+        const canvas = document.createElement('canvas');
+        const tempRenderer = new THREE.WebGLRenderer({ canvas });
+        ktx2Loader.detectSupport(tempRenderer);
+        tempRenderer.dispose();
+        canvas.remove();
+      } catch (e) {
+        console.warn('Could not detect KTX2 support:', e);
+      }
+    }
+
+    this.loaders.ktx2Loader = ktx2Loader;
+
+    // glTF loaders with different compression configurations
+    // Uncompressed GLTF
     this.loaders.gltfLoader = new GLTFLoader(this.manager);
+
+    // GLTF with Draco compression
+    this.loaders.gltfDracoLoader = new GLTFLoader(this.manager);
+    this.loaders.gltfDracoLoader.setDRACOLoader(dracoLoader);
+
+    // GLTF with KTX2 texture compression
+    this.loaders.gltfKTX2Loader = new GLTFLoader(this.manager);
+    this.loaders.gltfKTX2Loader.setKTX2Loader(ktx2Loader);
+
+    // GLTF with both Draco and KTX2 compression
+    this.loaders.gltfDracoKTX2Loader = new GLTFLoader(this.manager);
+    this.loaders.gltfDracoKTX2Loader.setDRACOLoader(dracoLoader);
+    this.loaders.gltfDracoKTX2Loader.setKTX2Loader(ktx2Loader);
 
     // textures
     this.loaders.textureLoader = new THREE.TextureLoader(this.manager);
     this.loaders.hdriLoader = new HDRLoader(this.manager);
     this.loaders.cubeTextureLoader = new THREE.CubeTextureLoader(this.manager);
+
+    // fonts
+    this.loaders.fontLoader = new FontLoader(this.manager);
+
+    // audio context for audio loading
+    this.audioContext = null;
+    if (
+      typeof window !== 'undefined' &&
+      (window.AudioContext || window.webkitAudioContext)
+    ) {
+      this.audioContext = new (
+        window.AudioContext || windowy.webkitAudioContext
+      )();
+    }
   }
 
   initLoading() {
@@ -134,11 +181,17 @@ export default class ResourceLoader extends EventEmitter {
       const onProgress = undefined;
 
       switch (type) {
-        case 'gltfModelCompressed':
-          this.loaders.gltfCompressLoader.load(path, onLoad, onProgress);
-          break;
         case 'gltfModel':
           this.loaders.gltfLoader.load(path, onLoad, onProgress);
+          break;
+        case 'gltfModelDracoCompressed':
+          this.loaders.gltfDracoLoader.load(path, onLoad, onProgress);
+          break;
+        case 'gltfModelKTX2Compressed':
+          this.loaders.gltfKTX2Loader.load(path, onLoad, onProgress);
+          break;
+        case 'gltfModelDracoKTX2Compressed':
+          this.loaders.gltfDracoKTX2Loader.load(path, onLoad, onProgress);
           break;
         case 'texture':
           this.loaders.textureLoader.load(path, onLoad, onProgress);
@@ -149,9 +202,42 @@ export default class ResourceLoader extends EventEmitter {
         case 'cubeMap':
           this.loaders.cubeTextureLoader.load(path, onLoad, onProgress);
           break;
+        case 'font':
+          this.loaders.fontLoader.load(path, onLoad, onProgress);
+          break;
+        case 'audio':
+          this.loadAudio(path, id);
+          break;
         default:
           console.warn(`Unknown asset type: ${type}`);
       }
     }
+  }
+
+  loadAudio(path, id) {
+    if (!this.audioContext) {
+      console.warn('AudioContext not available, skipping audio load:', id);
+      this.manager.itemEnd(path);
+      return;
+    }
+
+    this.manager.itemStart(path);
+
+    fetch(path)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to load audio: ${response.statusText}`);
+        }
+        return response.arrayBuffer();
+      })
+      .then((arrayBuffer) => this.audioContext.decodeAudioData(arrayBuffer))
+      .then((audioBuffer) => {
+        this.items[id] = audioBuffer;
+        this.manager.itemEnd(path);
+      })
+      .catch((error) => {
+        console.error(`Error loading audio ${id}:`, error);
+        this.manager.itemError(path);
+      });
   }
 }
