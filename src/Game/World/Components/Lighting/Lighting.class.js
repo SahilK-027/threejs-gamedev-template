@@ -14,8 +14,8 @@ export default class Lighting {
 
   setThreeDirectionalLights() {
     // Key light: primary, bright, casts strong shadows
-    this.keyLight = new THREE.DirectionalLight(0xffffff, 4, 0, 2);
-    this.keyLight.position.set(2, 2, -2);
+    this.keyLight = new THREE.DirectionalLight(0x777777, 10, 0, 2);
+    this.keyLight.position.set(2, 2, -1);
     this.keyLight.castShadow = true;
     this.keyLight.shadow.mapSize.set(512, 512);
     this.keyLight.shadow.radius = 2;
@@ -32,12 +32,12 @@ export default class Lighting {
     this.scene.add(this.keyLight);
 
     // Fill light: softer, reduces shadows
-    this.fillLight = new THREE.DirectionalLight(0xffffff, 0.7, 0, 2);
+    this.fillLight = new THREE.DirectionalLight(0x777777, 0.7, 0, 2);
     this.fillLight.position.set(0, 1.0, 2);
     this.scene.add(this.fillLight);
 
     // Back (rim) light: highlights edges
-    this.backLight = new THREE.DirectionalLight(0xffffff, 1.0, 0, 2);
+    this.backLight = new THREE.DirectionalLight(0x777777, 1.0, 0, 2);
     this.backLight.position.set(-2, 2, -2);
     this.scene.add(this.backLight);
 

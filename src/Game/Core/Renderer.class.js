@@ -78,6 +78,11 @@ export default class Renderer {
 
     this.rendererInstance.render(this.scene, this.camera.cameraInstance);
 
+    // Render world overlays (like gizmo helper)
+    if (this.game.world && typeof this.game.world.render === 'function') {
+      this.game.world.render();
+    }
+
     if (this.perf) {
       this.perf.endFrame();
     }

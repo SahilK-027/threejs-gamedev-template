@@ -4,6 +4,7 @@ import Time from './Utils/Time.class';
 import Camera from './Core/Camera.class';
 import Renderer from './Core/Renderer.class';
 import World from './World/World.scene';
+import DevEnvironment from './World/DevEnvironment.scene';
 import DebugPane from './Utils/DebugPane.class';
 import AudioManager from './Managers/AudioManager.class';
 import AudioSettingsUI from './UI/AudioSettingsUI.class';
@@ -11,7 +12,7 @@ import VisibilityManager from './Managers/VisibilityManager.class';
 import KeyboardControls from './Input/Keyboard.class';
 
 export default class Game {
-  constructor(canvas, resources, debugMode) {
+  constructor(canvas, resources, debugMode, environmentMode = 'game') {
     // Singleton
     if (Game.instance) {
       return Game.instance;
@@ -26,6 +27,7 @@ export default class Game {
     this.canvas = canvas;
     this.resources = resources;
     this.isPaused = false;
+    this.environmentMode = environmentMode;
 
     // Visibility Manager
     this.visibilityManager = new VisibilityManager();
@@ -42,7 +44,15 @@ export default class Game {
     this.scene = new THREE.Scene();
     this.camera = new Camera();
     this.renderer = new Renderer();
-    this.world = new World();
+    
+    // Load appropriate environment based on mode
+    if (this.environmentMode === 'dev') {
+      console.log('🔧 Loading Dev Environment...');
+      this.world = new DevEnvironment();
+    } else {
+      console.log('🎮 Loading Game World...');
+      this.world = new World();
+    }
 
     this.time.on('animate', () => {
       this.update();

@@ -2,9 +2,10 @@ import Game from './Game/Game.class';
 import ResourceLoader from './Game/Utils/ResourceLoader.class';
 import ASSETS from './Config/assets.js';
 
+const urlParams = new URLSearchParams(window.location.search);
 const isDebugMode =
-  typeof window !== 'undefined' &&
-  new URLSearchParams(window.location.search).get('mode') === 'debug';
+  typeof window !== 'undefined' && urlParams.get('mode') === 'debug';
+const environmentMode = urlParams.get('env') || 'game'; // 'game' or 'dev'
 
 const progressBar = document.getElementById('bar');
 const progress = document.getElementById('progress');
@@ -40,11 +41,20 @@ resources.on('loaded', () => {
   progressBar.style.display = 'none';
   progress.style.display = 'none';
 
+  // Show environment indicator
+  const envIndicator = document.getElementById('env-indicator');
+  if (environmentMode === 'dev') {
+    envIndicator.textContent = '🔧 DEV ENVIRONMENT';
+    envIndicator.style.display = 'block';
+    console.log('💡 Tip: Remove ?env=dev from URL to switch to game mode');
+  }
+
   // Initialize game but don't start audio yet
   const game = new Game(
     document.getElementById('three'),
     resources,
     isDebugMode,
+    environmentMode,
   );
 
   // Handle start button click

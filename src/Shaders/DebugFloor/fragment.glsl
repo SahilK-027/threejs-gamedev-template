@@ -34,14 +34,6 @@ void main() {
     float mask = 1.0 - smoothstep(uLineWidth - aa, uLineWidth + aa, d);
     gridColor = mix(gridColor, uLineColor, mask);
 
-    // ——— Axis helper ———
-    // Red: X axis
-    // Blue: Z axis
-    float d1 = length(vWorldPosition - vec3(0.0, 0.0, 1.0));
-    float d2 = length(vWorldPosition - vec3(1.0, 0.0, 0.0));
-    vec3 colour = mix(vec3(0.0, 0.0, 1.0), gridColor, smoothstep(0.0, 0.075, d1));
-    colour = mix(vec3(1.0, 0.0, 0.0), colour, smoothstep(0.0, 0.075, d2));
-
-    gl_FragColor = vec4(colour, 1.0);
+    gl_FragColor = vec4(gridColor, 1.0);
     #include <fog_fragment>
 }
