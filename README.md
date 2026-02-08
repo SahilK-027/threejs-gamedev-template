@@ -23,7 +23,7 @@ Production-ready Three.js template with modular architecture, asset management, 
 
 ## Quick Start
 
-```bash
+```sh
 # Clone or download this template
 git clone https://github.com/SahilK-027/threejs-gamedev-template.git
 cd threejs-gamedev-template
@@ -51,7 +51,7 @@ Out of the box, this template includes:
 
 ## Available Commands
 
-```bash
+```sh
 npm run dev          # Start development server (main game)
 npm run dev:env      # Start dev environment (testing playground)
 npm run dev:debug    # Start with debug mode enabled
@@ -74,21 +74,33 @@ Keep the example players and modify them to learn the architecture:
 Remove example content and start with a clean slate:
 
 1. **Remove example players:**
-   ```bash
+   ```sh
    rm src/Game/Entities/Player1.class.js
    rm src/Game/Entities/Player2.class.js
    ```
 
 2. **Clean up World.scene.js:**
-   ```javascript
+   ```diff
    // src/Game/World/World.scene.js
-   // Remove Player1 and Player2 imports and instantiation
+   - import Player1 from '../Entities/Player1.class';
+   - import Player2 from '../Entities/Player2.class';
+   
+   export default class World {
+     constructor() {
+   -   this.player1 = new Player1();
+   -   this.player2 = new Player2();
+     }
+   }
    ```
 
 3. **Remove example assets from assets.js:**
-   ```javascript
+   ```diff
    // src/Config/assets.js
-   // Remove player1Model, player2Model, and example audio
+   const ASSETS = [
+   -  { id: 'player1Model', type: 'gltfModel', path: '/assets/models/jade.glb' },
+   -  { id: 'player2Model', type: 'gltfModel', path: '/assets/models/nix.glb' },
+   -  { id: 'bgMusic', type: 'audio', path: '/assets/audio/bgm/music.mp3' },
+   ];
    ```
 
 4. **Start building your game:**
@@ -99,7 +111,7 @@ Remove example content and start with a clean slate:
 
 ### Your First Custom Entity
 
-```javascript
+```js
 // src/Game/Entities/MyEntity.class.js
 import * as THREE from 'three';
 import Game from '../Game.class';
@@ -134,7 +146,7 @@ export default class MyEntity {
 
 Then add it to your world:
 
-```javascript
+```js
 // src/Game/World/World.scene.js
 import MyEntity from '../Entities/MyEntity.class';
 
@@ -175,7 +187,7 @@ Game.class.js (Singleton)
 
 Access the game instance from anywhere:
 
-```javascript
+```js
 import Game from './Game/Game.class';
 
 const game = Game.getInstance();
@@ -218,7 +230,7 @@ The gizmo rotates to match your camera orientation, helping you understand the c
 
 **Customization:**
 
-```javascript
+```js
 // src/Game/World/DevEnvironment.scene.js or World.scene.js
 this.gizmoHelper = new GizmoHelper({
   alignment: 'bottom-right', // or 'top-left', 'top-right', 'bottom-left'
@@ -236,7 +248,7 @@ Access via `npm run dev:env` or add `?env=dev` to the URL.
 
 **Quick example:**
 
-```javascript
+```js
 // src/Game/World/DevEnvironment.scene.js
 const cube = new THREE.Mesh(
   new THREE.BoxGeometry(2, 2, 2),
@@ -761,16 +773,19 @@ Contributions are welcome! Please follow these guidelines:
 
 ## License
 
-MIT License - Free to use, modify, and distribute.
+Apache-2.0 License - Permissive reuse with explicit patent grant.
 
-This project is open source and available to all developers. You're free to:
+This project is licensed under the Apache License 2.0, which is particularly well-suited for multimedia, audio, and engine code. You're free to:
 
 - Use this template for personal or commercial projects
 - Modify and adapt the code to your needs
 - Distribute and share your modifications
 - Build games and applications without restrictions
+- Benefit from explicit patent protection
 
-No attribution required, though always appreciated! Use this template however you like and build something awesome.
+The Apache-2.0 license provides the same permissive freedoms as MIT while adding an explicit patent grant, protecting you and your users from patent claims. This makes it ideal for game development projects that may involve complex multimedia processing and engine code.
+
+See the [LICENSE](LICENSE) file for full details.
 
 ### Asset Licenses
 

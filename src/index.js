@@ -44,7 +44,7 @@ resources.on('loaded', () => {
   // Show environment indicator
   const envIndicator = document.getElementById('env-indicator');
   if (environmentMode === 'dev') {
-    envIndicator.textContent = '🔧 DEV ENVIRONMENT';
+    envIndicator.textContent = '</> DEV ENVIRONMENT';
     envIndicator.style.display = 'block';
     console.log('💡 Tip: Remove ?env=dev from URL to switch to game mode');
   }
