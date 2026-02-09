@@ -792,10 +792,10 @@ See the [LICENSE](LICENSE) file for full details.
 The included 3D models are licensed under CC-BY-4.0 and require attribution:
 
 **Jade Model:**
-This work is based on ["Zooba, Jade (With Anims)"](https://sketchfab.com/3d-models/zooba-jade-with-anims-3ddb1b357f3a4b60973cf72dce035e71) by [Matt Alexander](https://sketchfab.com/alexanderfamilytravels) licensed under [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/)
+This work is based on ["Zooba, Jade (With Anims)"](https://sketchfab.com/3d-models/zooba-jade-with-anims-3ddb1b357f3a4b60973cf72dce035e71) by [Matt Alexander](https://sketchfab.com/Matt-Alexander) licensed under [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/)
 
 **Nix Model:**
-This work is based on ["Zooba, Nix (With Anims)"](https://sketchfab.com/3d-models/zooba-nix-with-anims-c654d262418249b6b5a679031a6d977c) by [Matt Alexander](https://sketchfab.com/alexanderfamilytravels) licensed under [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/)
+This work is based on ["Zooba, Nix (With Anims)"](https://sketchfab.com/3d-models/zooba-nix-with-anims-c654d262418249b6b5a679031a6d977c) by [Matt Alexander](https://sketchfab.com/Matt-Alexander) licensed under [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/)
 
 If you use these models in your project, you must credit the original author. Commercial use is allowed with proper attribution. Check `public/assets/models/` for individual license files.
 
